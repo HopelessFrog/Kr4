@@ -1,0 +1,371 @@
+﻿<Window x:Class="Kr4.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel="clr-namespace:Kr4.ViewModel"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+
+
+
+   
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Style.Setters>
+                <Setter Property="Button.Background" Value="Black" />
+                <Setter Property="Button.Foreground" Value="White" />
+                <Setter Property="Button.FontFamily" Value="Verdana" />
+                <Setter Property="Button.Margin" Value="10" />
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="FontSize" Value="14" />
+                    <Setter Property="Foreground" Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="TextBox">
+
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="Text" Value=""/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="160*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0"  >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100*"/>
+                <RowDefinition Height="100*"/>
+
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Background="Aquamarine">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="45*"/>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="50*"/>
+
+
+                </Grid.RowDefinitions>
+
+                <TextBox   Grid.Row="0"  Margin="5 25 5 5" Text="{Binding SearchBar}" 
+                           Foreground="Gray" 
+                           Background="White" >
+
+                </TextBox>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Grid.Row="1" Command="{Binding Search}" FontSize="25" Content="Search" VerticalAlignment="Top" HorizontalAlignment="Center" />
+                  
+
+
+                </StackPanel>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Grid.Row="1" Command="{Binding Change}" FontSize="25" Content="Change" VerticalAlignment="Top" HorizontalAlignment="Center" />
+                    <Button Content="Delete" Command="{Binding Delete}" FontSize="25" VerticalAlignment="Top" />
+
+
+                </StackPanel>
+            </Grid>
+
+
+
+
+
+            <StackPanel Grid.Row="1" Background="Plum">
+                <Button Content="Add " Margin="3" FontSize="24" Command="{Binding OpenAdd}"/>
+                <CheckBox Content="Greetings" IsChecked="{Binding GreetingsSwitch}"/>
+
+
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1" Background="PapayaWhip" >
+            <TabControl Grid.Row="0" SelectedIndex="{Binding SelectedTab}"  >
+                <TabItem Header="Planets" >
+
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="10*"/>
+                            <RowDefinition Height="90*"/>
+
+                        </Grid.RowDefinitions>
+                        <Grid Background="Linen">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="7*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="9*"/>
+                                <ColumnDefinition Width="9*"/>
+                                <ColumnDefinition Width="9*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0" >
+                                <Label Content="Min Age:" FontSize="20"/>
+                            </Grid>
+                            <Grid Grid.Column="2">
+                                <xctk:DoubleUpDown Minimum="0.0" Margin="2 " DefaultValue="0.0" AllowSpin="True" Value="{Binding MinAge}"/>
+                            </Grid>
+                            <Grid Grid.Column="3" >
+                                <Label Content="Max Age:" FontSize="20"/>
+                            </Grid>
+                            <Grid Grid.Column="4">
+                                <xctk:DoubleUpDown Minimum="0" Margin="2 " DefaultValue="99999" AllowSpin="True" Value="{Binding MaxAge}"/>
+                            </Grid>
+
+
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding Planets}" SelectedItem="{Binding SelectedObject}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <UniformGrid Columns="5">
+
+
+                                            <UniformGrid.Resources>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Margin" Value="2"/>
+                                                    <Setter Property="TextAlignment" Value="Center"/>
+                                                </Style>
+                                            </UniformGrid.Resources>
+
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding Name}"/>
+                                            <TextBlock HorizontalAlignment ="Center" Text  ="{Binding Size}"/>
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding OrbitalPeriod}"/>
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding DistanceFromEarth}"/>
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding Age}"/>
+
+
+
+                                        </UniformGrid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+
+                                <ListBox.Template>
+                                    <ControlTemplate TargetType="{x:Type ListBox}">
+                                        <StackPanel >
+                                            <UniformGrid Columns="5" >
+                                                <TextBlock Text="Name" HorizontalAlignment ="Center"  FontWeight="Bold" />
+                                                <TextBlock Text="Size" HorizontalAlignment ="Center" FontWeight="Bold" />
+                                                <TextBlock Text="OrbitalPeriod" HorizontalAlignment ="Center" FontWeight="Bold" />
+                                                <TextBlock Text="DistanceFromEarth" HorizontalAlignment ="Center" FontWeight="Bold" />
+                                                <TextBlock Text="Age" HorizontalAlignment ="Center" FontWeight="Bold" />
+
+
+                                            </UniformGrid>
+                                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                <ItemsPresenter />
+                                            </Border>
+                                        </StackPanel>
+                                    </ControlTemplate>
+                                </ListBox.Template>
+                            </ListBox>
+                        </Grid>
+
+
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Stars">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="10*"/>
+                            <RowDefinition Height="90*"/>
+
+                        </Grid.RowDefinitions>
+                        <Grid Background="Linen">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0" Margin="2">
+                                <Label Content="Spectral class:" FontSize="13"/>
+                            </Grid>
+                            <Grid Grid.Column="1">
+
+                                <ComboBox    SelectedIndex="0" SelectedItem="{Binding SpectralClassEntered}" ItemsSource="{Binding SpectralClasses}"
+                                            DisplayMemberPath="Name" SelectedValuePath="Name" >
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName ="DropDownOpened" >
+                                            <b:InvokeCommandAction Command="{Binding LoadSpectralClasses }"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </ComboBox>
+                            </Grid>
+                            <Grid Grid.Column="2" Margin="2">
+                                <Label Content="Min Age:" FontSize="20"/>
+                            </Grid>
+                            <Grid Grid.Column="3" Margin="2">
+                                <xctk:DoubleUpDown Minimum="0" Margin="2 " DefaultValue="0" AllowSpin="True" Value="{Binding MinAge}"/>
+                            </Grid>
+                            <Grid Grid.Column="4"  Margin="2">
+                                <Label Content="Max Age:" FontSize="20"/>
+                            </Grid>
+                            <Grid Grid.Column="5">
+                                <xctk:DoubleUpDown Minimum="0" Margin="2 " DefaultValue="99999" AllowSpin="True" Value="{Binding MaxAge}"/>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding Stars}" SelectedItem="{Binding SelectedObject}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <UniformGrid Columns="5">
+
+
+                                            <UniformGrid.Resources>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Margin" Value="2"/>
+                                                    <Setter Property="TextAlignment" Value="Center"/>
+                                                </Style>
+                                            </UniformGrid.Resources>
+
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding Name}"/>
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding Luminosity}"/>
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding Class.Name}"/>
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding DistanceFromEarth}"/>
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding Age}"/>
+
+
+
+                                        </UniformGrid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <ListBox.Template>
+                                    <ControlTemplate TargetType="{x:Type ListBox}">
+                                        <StackPanel>
+                                            <UniformGrid Columns="5" >
+                                                <TextBlock Text="Name" HorizontalAlignment ="Center"  FontWeight="Bold" />
+                                                <TextBlock Text="Luminosity" HorizontalAlignment ="Center" FontWeight="Bold" />
+                                                <TextBlock Text="Spectral class" HorizontalAlignment ="Center" FontWeight="Bold" />
+                                                <TextBlock Text="DistanceFromEarth" HorizontalAlignment ="Center" FontWeight="Bold" />
+                                                <TextBlock Text="Age" HorizontalAlignment ="Center" FontWeight="Bold" />
+
+
+                                            </UniformGrid>
+                                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                <ItemsPresenter />
+                                            </Border>
+                                        </StackPanel>
+                                    </ControlTemplate>
+                                </ListBox.Template>
+                            </ListBox>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Galaxys">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="10*"/>
+                            <RowDefinition Height="90*"/>
+
+                        </Grid.RowDefinitions>
+                        <Grid Background="Linen">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0" Margin="2">
+                                <Label Content="Galaxys type:" FontSize="15"/>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <ComboBox SelectedIndex="0" SelectedItem="{Binding GalaxyTypeEnter}" ItemsSource="{Binding GalaxyTypes}"
+                                          DisplayMemberPath="Name" SelectedValuePath="Name">
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName ="DropDownOpened" >
+                                            <b:InvokeCommandAction Command="{Binding LoadGalaxyTypes }"/>
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </ComboBox>
+
+                            </Grid>
+                            <Grid Grid.Column="2">
+                                <Label Content="Min Age:" FontSize="20"/>
+                            </Grid>
+                            <Grid Grid.Column="3" >
+                                <xctk:DoubleUpDown Minimum="0" Margin="2 " DefaultValue="0" AllowSpin="True" Value="{Binding MinAge}"/>
+                            </Grid>
+                            <Grid Grid.Column="4"  >
+                                <Label Content="Max Age:" FontSize="20"/>
+                            </Grid>
+                            <Grid Grid.Column="5">
+                                <xctk:DoubleUpDown  Minimum="0" Margin="2 " DefaultValue="99999" AllowSpin="True" Value="{Binding MaxAge}"/>
+                            </Grid>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding Galaxies}" SelectedItem="{Binding SelectedObject}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <UniformGrid Columns="4">
+
+
+                                            <UniformGrid.Resources>
+                                                <Style TargetType="TextBox">
+                                                    <Setter Property="Margin" Value="2"/>
+                                                    <Setter Property="TextAlignment" Value="Center"/>
+                                                </Style>
+                                            </UniformGrid.Resources>
+
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding Name}"/>
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding Type.Name}"/>
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding DistanceFromEarth}"/>
+                                            <TextBlock HorizontalAlignment ="Center" Text ="{Binding Age}"/>
+
+
+
+                                        </UniformGrid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <ListBox.Template>
+                                    <ControlTemplate TargetType="{x:Type ListBox}">
+                                        <StackPanel>
+                                            <UniformGrid Columns="4" >
+                                                <TextBlock Text="Name" HorizontalAlignment ="Center"  FontWeight="Bold" />
+                                                <TextBlock Text="Galaxys Type" HorizontalAlignment ="Center" FontWeight="Bold" />
+                                                <TextBlock Text="DistanceFromEarth" HorizontalAlignment ="Center" FontWeight="Bold" />
+                                                <TextBlock Text="Age" HorizontalAlignment ="Center" FontWeight="Bold" />
+
+
+                                            </UniformGrid>
+                                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                <ItemsPresenter />
+                                            </Border>
+                                        </StackPanel>
+                                    </ControlTemplate>
+                                </ListBox.Template>
+                            </ListBox>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Coming soon..." IsEnabled="False" >
+
+                </TabItem>
+            </TabControl>
+            <Grid.RowDefinitions>
+
+                <RowDefinition Height="25*"/>
+
+
+            </Grid.RowDefinitions>
+        </Grid>
+
+    </Grid>
+</Window>
