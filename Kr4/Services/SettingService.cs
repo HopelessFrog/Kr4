@@ -15,7 +15,7 @@ namespace Kr4.Services.Interface
             {
                 try
                 {
-                    return bool.Parse(ConfigurationManager.AppSettings["ShowFriendlyMessage"]);
+                    return bool.Parse(ConfigurationManager.AppSettings["ShowFriendlyMessage"]!);
                 }
                 catch (Exception e)
                 {

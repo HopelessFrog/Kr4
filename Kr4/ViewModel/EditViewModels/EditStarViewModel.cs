@@ -25,11 +25,11 @@ namespace Kr4.ViewModel.EditViewModels
         {
             get
             {
-                var spectralClasses = DatabaseLocator.Context.SpectralClasses.ToList();
+                var spectralClasses = DatabaseLocator.Context!.SpectralClasses.ToList();
                 return spectralClasses;
             }
         }
-        public string Name
+        public string? Name
         {
             get { return star.Name; }
             set
@@ -57,7 +57,7 @@ namespace Kr4.ViewModel.EditViewModels
 
         public SpectralClass SpectralClass
         {
-            get { return star!.Class; }
+            get { return star!.Class!; }
             set
             {
                 if( star.Class!= value)
@@ -108,7 +108,6 @@ namespace Kr4.ViewModel.EditViewModels
         {
             get
             {
-                SpectralClass tempClass;
                 return new DelegateCommand(() =>
                 {
                     TinyMapper.Map<Star, Star>(defaultStar, star);
@@ -138,7 +137,7 @@ namespace Kr4.ViewModel.EditViewModels
             Close?.Invoke();
         }
 
-        public Action Close { get; set; }
+        public Action Close { get; set; } = null!;
 
         public bool CanClose()
         {

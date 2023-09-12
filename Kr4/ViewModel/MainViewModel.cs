@@ -83,65 +83,65 @@ namespace Kr4.ViewModel
             this.messageService = messageService;
             this.settingService = settingService;
 
-            Planets.CollectionChanged += (s, e) =>
-            {
-                if (e.NewItems != null)
-                    DatabaseLocator.Context.Planets.AddRange(e.NewItems.Cast<Planet>());
-                else if  (e.OldItems != null)
-                    DatabaseLocator.Context.Planets.RemoveRange(e.OldItems.Cast<Planet>());
-                else if (e.Action == NotifyCollectionChangedAction.Replace)
-                {
-                    foreach (Galaxy item in e!.NewItems)
-                    {
-                        DatabaseLocator.Context.Galaxys.Entry(item).State = EntityState.Modified;
-                    }
-                }
-                DatabaseLocator.Context.SaveChanges();
+            //Planets.CollectionChanged += (s, e) =>
+            //{
+            //    if (e.NewItems != null)
+            //        DatabaseLocator.Context.Planets.AddRange(e.NewItems.Cast<Planet>());
+            //    else if  (e.OldItems != null)
+            //        DatabaseLocator.Context.Planets.RemoveRange(e.OldItems.Cast<Planet>());
+            //    else if (e.Action == NotifyCollectionChangedAction.Replace)
+            //    {
+            //        foreach (Galaxy item in e!.NewItems!)
+            //        {
+            //            DatabaseLocator.Context.Galaxys.Entry(item).State = EntityState.Modified;
+            //        }
+            //    }
+            //    DatabaseLocator.Context.SaveChanges();
 
-            };
-            Stars.CollectionChanged += (s, e) =>
-            {
-                if (e.NewItems != null)
-                    DatabaseLocator.Context.Stars.AddRange(e.NewItems.Cast<Star>());
-                else if (e.OldItems != null)
-                    DatabaseLocator.Context.Stars.RemoveRange(e.OldItems.Cast<Star>());
-                else if (e.Action == NotifyCollectionChangedAction.Replace)
-                {
-                    foreach (Star item in e.NewItems)
-                    {
-                        DatabaseLocator.Context.Stars.Entry(item).State = EntityState.Modified;
-                    }
-                }
-                DatabaseLocator.Context.SaveChanges();
+            //};
+            //Stars.CollectionChanged += (s, e) =>
+            //{
+            //    if (e.NewItems != null)
+            //        DatabaseLocator.Context.Stars.AddRange(e.NewItems.Cast<Star>());
+            //    else if (e.OldItems != null)
+            //        DatabaseLocator.Context.Stars.RemoveRange(e.OldItems.Cast<Star>());
+            //    else if (e.Action == NotifyCollectionChangedAction.Replace)
+            //    {
+            //        foreach (Star item in e.NewItems!)
+            //        {
+            //            DatabaseLocator.Context.Stars.Entry(item).State = EntityState.Modified;
+            //        }
+            //    }
+            //    DatabaseLocator.Context.SaveChanges();
 
-            };
-            Galaxies.CollectionChanged += (s, e) =>
-            {
-                if (e.NewItems != null)
-                    DatabaseLocator.Context.Galaxys.AddRange(e.NewItems.Cast<Galaxy>());
-                else if (e.OldItems != null)
-                    DatabaseLocator.Context.Galaxys.RemoveRange(e.OldItems.Cast<Galaxy>());
-                else if (e.Action == NotifyCollectionChangedAction.Replace)
-                {
-                    foreach (Galaxy item in e!.NewItems)
-                    {
-                        DatabaseLocator.Context.Galaxys.Entry(item).State = EntityState.Modified;
-                    }
-                }
+            //};
+            //Galaxies.CollectionChanged += (s, e) =>
+            //{
+            //    if (e.NewItems != null)
+            //        DatabaseLocator.Context.Galaxys.AddRange(e.NewItems.Cast<Galaxy>());
+            //    else if (e.OldItems != null)
+            //        DatabaseLocator.Context.Galaxys.RemoveRange(e.OldItems.Cast<Galaxy>());
+            //    else if (e.Action == NotifyCollectionChangedAction.Replace)
+            //    {
+            //        foreach (Galaxy item in e!.NewItems!)
+            //        {
+            //            DatabaseLocator.Context.Galaxys.Entry(item).State = EntityState.Modified;
+            //        }
+            //    }
                
-                DatabaseLocator.Context.SaveChanges();
+            //    DatabaseLocator.Context.SaveChanges();
 
               
 
 
-            };
+            //};
             greetingsSwitch = settingService.Greetings;
             if (greetingsSwitch)
               messageService.SendMessage("Hey, have a good day");
 
         }
 
-        public IAstronomicalObject SelectedObject { get; set; }
+        public IAstronomicalObject SelectedObject { get; set; } = null!;
 
         private bool greetingsSwitch;
         public bool GreetingsSwitch
@@ -165,13 +165,13 @@ namespace Kr4.ViewModel
         public int MaxAge { get; set; } = 99999;
         public int SelectedTab { get; set; }
 
-        public string SearchBar { get; set; }
+        public string SearchBar { get; set; } = null!;
 
         public List<GalaxyType> GalaxyTypes
         {
             get
             {
-                var galaxyType = DatabaseLocator.Context.GalaxysTypes.ToList();
+                var galaxyType = DatabaseLocator.Context!.GalaxysTypes.ToList();
                 galaxyType.Insert(0, new GalaxyType() { Name = "none" });
                 return galaxyType;
             }
@@ -181,15 +181,15 @@ namespace Kr4.ViewModel
         {
             get
             {
-                var spectralClasses = DatabaseLocator.Context.SpectralClasses.ToList();
+                var spectralClasses = DatabaseLocator.Context!.SpectralClasses.ToList();
                 spectralClasses.Insert(0, new SpectralClass() { Name = "none" });
                 return spectralClasses;
                
             }
         }
 
-        public GalaxyType GalaxyTypeEnter { get; set; }
-        public SpectralClass SpectralClassEntered { get; set; }
+        public GalaxyType GalaxyTypeEnter { get; set; } = null!;
+        public SpectralClass SpectralClassEntered { get; set; } = null!;
 
         public ICommand LoadSpectralClasses
         {
@@ -234,11 +234,11 @@ namespace Kr4.ViewModel
                 return new DelegateCommand(() =>
                 {
                     if (SelectedObject is Planet)
-                        Planets.Remove(SelectedObject as Planet);
+                        Planets.Remove((SelectedObject as Planet)!);
                     else if (SelectedObject is Galaxy)
-                       Galaxies.Remove(SelectedObject as Galaxy);
+                       Galaxies.Remove((SelectedObject as Galaxy)!);
                     else if (SelectedObject is Star)
-                        Stars.Remove(SelectedObject as Star);
+                        Stars.Remove((SelectedObject as Star)!);
                     else
                        messageService.SendMessage("Select an object to delete");
                    
@@ -260,14 +260,12 @@ namespace Kr4.ViewModel
                     switch (SelectedTab)
                     {
                         case PlanetsTab:
-                            var planets = DatabaseLocator.Context.Planets.AsQueryable();
+                            var planets = DatabaseLocator.Context!.Planets.AsQueryable();
                             List<Expression<Func<Planet, bool>>> conditionsPlanets = new List<Expression<Func<Planet, bool>>>();
-                            if(SearchBar != "" && SearchBar != null)
-                                conditionsPlanets.Add(p => p.Name.Contains(SearchBar));
-                            if(MinAge != 0)
-                                conditionsPlanets.Add(p => p.Age > MinAge);
-                            if(MaxAge != 99999)
-                                conditionsPlanets.Add(p => p.Age < MaxAge);
+                            if(!string.IsNullOrEmpty(SearchBar))
+                                conditionsPlanets.Add(p => p.Name!.Contains(SearchBar));
+                           conditionsPlanets.Add(p => p.Age > MinAge);
+                           conditionsPlanets.Add(p => p.Age < MaxAge);
                             foreach (var item in conditionsPlanets)
                             {
                                 planets = planets.Where(item);
@@ -275,16 +273,14 @@ namespace Kr4.ViewModel
                             Planets = new ObservableCollection<Planet>(planets.ToList());
                             break;
                         case StarsTab:
-                            var stars = DatabaseLocator.Context.Stars.AsQueryable();
+                            var stars = DatabaseLocator.Context!.Stars.AsQueryable();
                             List<Expression<Func<Star, bool>>> conditionsStars = new List<Expression<Func<Star, bool>>>();
                             if(SpectralClassEntered != null && SpectralClassEntered.Name != "none"  )
-                                conditionsStars.Add(s => s.Class.Name == SpectralClassEntered.Name);
+                                conditionsStars.Add(s => s.Class!.Name == SpectralClassEntered.Name);
                             if (SearchBar != "" && SearchBar != null)
-                                conditionsStars.Add(p => p.Name.Contains(SearchBar));
-                            if (MinAge != 0)
-                                conditionsStars.Add(p => p.Age > MinAge);
-                            if (MaxAge != 99999)
-                                conditionsStars.Add(p => p.Age < MaxAge);
+                                conditionsStars.Add(p => p.Name!.Contains(SearchBar));
+                            conditionsStars.Add(p => p.Age > MinAge);
+                            conditionsStars.Add(p => p.Age < MaxAge);
                             foreach (var item in conditionsStars)
                             {
                                 stars = stars.Where(item);
@@ -295,13 +291,11 @@ namespace Kr4.ViewModel
                             var galaxies = DatabaseLocator.Context!.Galaxys.AsQueryable();
                             List<Expression<Func<Galaxy, bool>>> conditionsGalaxies = new List<Expression<Func<Galaxy, bool>>>();
                             if (GalaxyTypeEnter != null && GalaxyTypeEnter.Name != "none" )
-                                conditionsGalaxies.Add(g => g.Type.Name == GalaxyTypeEnter.Name);
+                                conditionsGalaxies.Add(g => g.Type!.Name == GalaxyTypeEnter.Name);
                             if (SearchBar != "" && SearchBar != null)
-                                conditionsGalaxies.Add(p => p.Name.Contains(SearchBar));
-                            if (MinAge != 0)
-                                conditionsGalaxies.Add(p => p.Age > MinAge);
-                            if (MaxAge != 99999)
-                                conditionsGalaxies.Add(p => p.Age < MaxAge);
+                                conditionsGalaxies.Add(p => p.Name!.Contains(SearchBar));
+                          conditionsGalaxies.Add(p => p.Age > MinAge);
+                          conditionsGalaxies.Add(p => p.Age < MaxAge);
                             foreach (var item in conditionsGalaxies)
                             {
                                 galaxies = galaxies.Where(item);

@@ -34,7 +34,7 @@ namespace Kr4.ViewModel
         }
 
         public int SelectedTab { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         public double Size { get; set; }
 
         public double OrbitalPeriod { get; set; }
@@ -45,11 +45,10 @@ namespace Kr4.ViewModel
 
         public double Luminosity { get; set; }
 
-        public SpectralClass SpectralClass { get; set; }
+        public SpectralClass SpectralClass { get; set; } = null!;
 
-        public GalaxyType GalaxyType { get; set; }
+        public GalaxyType GalaxyType { get; set; } = null!;
 
-      
 
         private void clearFields()
         {

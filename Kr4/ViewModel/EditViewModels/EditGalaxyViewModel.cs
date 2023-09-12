@@ -31,7 +31,7 @@ namespace Kr4.ViewModel.EditViewModels
             }
         }
 
-        public string Name
+        public string? Name
         {
             get { return galaxy.Name; }
             set
@@ -46,7 +46,7 @@ namespace Kr4.ViewModel.EditViewModels
 
         public GalaxyType GalaxyType
         {
-            get { return galaxy.Type; }
+            get => galaxy.Type!;
             set
             {
                 if (galaxy.Type != value)
@@ -57,11 +57,11 @@ namespace Kr4.ViewModel.EditViewModels
             }
         }
 
-       
+
 
         public double DistanceFromEarth
         {
-            get { return galaxy.DistanceFromEarth; }
+            get { return galaxy.DistanceFromEarth!; }
             set
             {
                 if (galaxy.DistanceFromEarth != value)
@@ -126,7 +126,7 @@ namespace Kr4.ViewModel.EditViewModels
             Close?.Invoke();
         }
 
-        public Action Close { get; set; }
+        public Action Close { get; set; } = null!;
 
         public bool CanClose()
         {

@@ -11,7 +11,7 @@ namespace Kr4.Model.Entities
     {
         public GalaxyType? Type { get; set; }
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public double DistanceFromEarth { get; set; }
         public double Age { get; set; }
         

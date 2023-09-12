@@ -26,7 +26,7 @@ namespace Kr4.ViewModel.EditViewModels
         private IMessageService messageService;
 
 
-        public string Name
+        public string? Name
         {
             get { return planet.Name; }
             set
@@ -133,7 +133,7 @@ namespace Kr4.ViewModel.EditViewModels
             Close?.Invoke();
         }
 
-        public Action Close { get; set; }
+        public Action Close { get; set; } = null!;
 
         public bool CanClose()
         {

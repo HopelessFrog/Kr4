@@ -12,7 +12,7 @@ namespace Kr4.Model.Entities
         public int Id { get; set; }
         public SpectralClass? Class { get; set; }
         public double? Luminosity { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public double DistanceFromEarth { get; set; }
         public double Age { get; set; }
 

@@ -12,7 +12,7 @@ namespace Kr4.Model.Entities
         public int Id { get; set; }
         public double Size { get; set; }
         public double? OrbitalPeriod { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public double DistanceFromEarth { get; set; }
         public double Age { get; set; }
 
