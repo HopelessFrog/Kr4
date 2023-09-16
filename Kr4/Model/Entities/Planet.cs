@@ -16,9 +16,6 @@ namespace Kr4.Model.Entities
         public double DistanceFromEarth { get; set; }
         public double Age { get; set; }
 
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
+       
     }
 }

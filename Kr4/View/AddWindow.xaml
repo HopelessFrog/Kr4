@@ -154,7 +154,7 @@
                     </Grid>
                 </TabItem>
 
-                <TabItem Header="Add Galaxys">
+                <TabItem Header="Add Galaxies">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -185,7 +185,7 @@
                     </Grid>
                 </TabItem>
 
-                <TabItem Header="Add Galaxys type">
+                <TabItem Header="Add Galaxies type">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>

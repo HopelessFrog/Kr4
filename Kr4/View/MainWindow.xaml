@@ -267,7 +267,7 @@
                         </Grid>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Galaxys">
+                <TabItem Header="Galaxies">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="10*"/>
@@ -284,7 +284,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" Margin="2">
-                                <Label Content="Galaxys type:" FontSize="15"/>
+                                <Label Content="Galaxies type:" FontSize="15"/>
                             </Grid>
                             <Grid Grid.Column="1">
                                 <ComboBox SelectedIndex="0" SelectedItem="{Binding GalaxyTypeEnter}" ItemsSource="{Binding GalaxyTypes}"
@@ -339,7 +339,7 @@
                                         <StackPanel>
                                             <UniformGrid Columns="4" >
                                                 <TextBlock Text="Name" HorizontalAlignment ="Center"  FontWeight="Bold" />
-                                                <TextBlock Text="Galaxys Type" HorizontalAlignment ="Center" FontWeight="Bold" />
+                                                <TextBlock Text="Galaxies Type" HorizontalAlignment ="Center" FontWeight="Bold" />
                                                 <TextBlock Text="DistanceFromEarth" HorizontalAlignment ="Center" FontWeight="Bold" />
                                                 <TextBlock Text="Age" HorizontalAlignment ="Center" FontWeight="Bold" />
 

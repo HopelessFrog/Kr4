@@ -25,7 +25,7 @@ namespace Kr4.Model
 
         public DbSet<Planet> Planets { get; set; }
         public DbSet<Star> Stars { get; set; }
-        public DbSet<Galaxy> Galaxys { get; set; }
+        public DbSet<Galaxy> Galaxies { get; set; }
 
         public DbSet<SpectralClass> SpectralClasses { get; set; }
 

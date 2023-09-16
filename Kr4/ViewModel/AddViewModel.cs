@@ -140,7 +140,7 @@ namespace Kr4.ViewModel
                         case AddGalaxy:
                             if (Name != "" && GalaxyType != null )
                             {
-                                DatabaseLocator.Context!.Galaxys.Add(new Galaxy()
+                                DatabaseLocator.Context!.Galaxies.Add(new Galaxy()
                                 {
                                     Name = this.Name, Type = GalaxyType, DistanceFromEarth = this.DistanceFromEarth,
                                     Age = this.Age

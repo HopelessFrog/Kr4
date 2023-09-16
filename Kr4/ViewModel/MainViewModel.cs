@@ -77,7 +77,7 @@ namespace Kr4.ViewModel
             
             Planets = new ObservableCollection<Planet>(DatabaseLocator.Context.Planets.ToList());
             Stars = new ObservableCollection<Star>(DatabaseLocator.Context.Stars.ToList());
-            Galaxies = new ObservableCollection<Galaxy>(DatabaseLocator.Context.Galaxys.ToList());
+            Galaxies = new ObservableCollection<Galaxy>(DatabaseLocator.Context.Galaxies.ToList());
 
             this.editWindowsFactory = editWindowsFactory;
             this.messageService = messageService;
@@ -93,7 +93,7 @@ namespace Kr4.ViewModel
             //    {
             //        foreach (Galaxy item in e!.NewItems!)
             //        {
-            //            DatabaseLocator.Context.Galaxys.Entry(item).State = EntityState.Modified;
+            //            DatabaseLocator.Context.Galaxies.Entry(item).State = EntityState.Modified;
             //        }
             //    }
             //    DatabaseLocator.Context.SaveChanges();
@@ -118,14 +118,14 @@ namespace Kr4.ViewModel
             //Galaxies.CollectionChanged += (s, e) =>
             //{
             //    if (e.NewItems != null)
-            //        DatabaseLocator.Context.Galaxys.AddRange(e.NewItems.Cast<Galaxy>());
+            //        DatabaseLocator.Context.Galaxies.AddRange(e.NewItems.Cast<Galaxy>());
             //    else if (e.OldItems != null)
-            //        DatabaseLocator.Context.Galaxys.RemoveRange(e.OldItems.Cast<Galaxy>());
+            //        DatabaseLocator.Context.Galaxies.RemoveRange(e.OldItems.Cast<Galaxy>());
             //    else if (e.Action == NotifyCollectionChangedAction.Replace)
             //    {
             //        foreach (Galaxy item in e!.NewItems!)
             //        {
-            //            DatabaseLocator.Context.Galaxys.Entry(item).State = EntityState.Modified;
+            //            DatabaseLocator.Context.Galaxies.Entry(item).State = EntityState.Modified;
             //        }
             //    }
                
@@ -288,7 +288,7 @@ namespace Kr4.ViewModel
                             Stars = new ObservableCollection<Star>(stars.ToList());
                             break;
                         case GalaxiesTab:
-                            var galaxies = DatabaseLocator.Context!.Galaxys.AsQueryable();
+                            var galaxies = DatabaseLocator.Context!.Galaxies.AsQueryable();
                             List<Expression<Func<Galaxy, bool>>> conditionsGalaxies = new List<Expression<Func<Galaxy, bool>>>();
                             if (GalaxyTypeEnter != null && GalaxyTypeEnter.Name != "none" )
                                 conditionsGalaxies.Add(g => g.Type!.Name == GalaxyTypeEnter.Name);
