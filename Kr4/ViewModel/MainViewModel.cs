@@ -23,18 +23,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kr4.ViewModel
 {
-    public class MainViewModel : ViewModelBase , IMainViewModel
+    public class MainViewModel : ViewModelBase, IMainViewModel
     {
 
         private const int PlanetsTab = 0;
         private const int StarsTab = 1;
         private const int GalaxiesTab = 2;
 
-       
+
 
         private IEditWindowsFactory editWindowsFactory;
         private IMessageService messageService;
         private ISettingService settingService;
+        private IExcelExportService excelExportService;
+        private IFileDialogService fileDialogService;
 
         public ObservableCollection<Planet> Planets { get; set; }
         public ObservableCollection<Star> Stars { get; set; }
@@ -48,7 +50,8 @@ namespace Kr4.ViewModel
         //}
 
 
-        public MainViewModel(IEditWindowsFactory editWindowsFactory, IMessageService messageService, ISettingService settingService)
+        public MainViewModel(IEditWindowsFactory editWindowsFactory, IMessageService messageService,
+            ISettingService settingService, IExcelExportService excelExportService, IFileDialogService fileDialogService)
         {
 
 
@@ -74,7 +77,7 @@ namespace Kr4.ViewModel
                 Luminosity = 90
             });
             DatabaseLocator.Context.SaveChanges();
-            
+
             Planets = new ObservableCollection<Planet>(DatabaseLocator.Context.Planets.ToList());
             Stars = new ObservableCollection<Star>(DatabaseLocator.Context.Stars.ToList());
             Galaxies = new ObservableCollection<Galaxy>(DatabaseLocator.Context.Galaxies.ToList());
@@ -82,74 +85,74 @@ namespace Kr4.ViewModel
             this.editWindowsFactory = editWindowsFactory;
             this.messageService = messageService;
             this.settingService = settingService;
+            this.excelExportService = excelExportService;
+            this.fileDialogService = fileDialogService;
 
-            //Planets.CollectionChanged += (s, e) =>
-            //{
-            //    if (e.NewItems != null)
-            //        DatabaseLocator.Context.Planets.AddRange(e.NewItems.Cast<Planet>());
-            //    else if  (e.OldItems != null)
-            //        DatabaseLocator.Context.Planets.RemoveRange(e.OldItems.Cast<Planet>());
-            //    else if (e.Action == NotifyCollectionChangedAction.Replace)
-            //    {
-            //        foreach (Galaxy item in e!.NewItems!)
-            //        {
-            //            DatabaseLocator.Context.Galaxies.Entry(item).State = EntityState.Modified;
-            //        }
-            //    }
-            //    DatabaseLocator.Context.SaveChanges();
+            Planets.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                    DatabaseLocator.Context.Planets.AddRange(e.NewItems.Cast<Planet>());
+                else if (e.OldItems != null)
+                    DatabaseLocator.Context.Planets.RemoveRange(e.OldItems.Cast<Planet>());
+                else if (e.Action == NotifyCollectionChangedAction.Replace)
+                {
+                    foreach (Galaxy item in e!.NewItems!)
+                    {
+                        DatabaseLocator.Context.Galaxies.Entry(item).State = EntityState.Modified;
+                    }
+                }
+                DatabaseLocator.Context.SaveChanges();
 
-            //};
-            //Stars.CollectionChanged += (s, e) =>
-            //{
-            //    if (e.NewItems != null)
-            //        DatabaseLocator.Context.Stars.AddRange(e.NewItems.Cast<Star>());
-            //    else if (e.OldItems != null)
-            //        DatabaseLocator.Context.Stars.RemoveRange(e.OldItems.Cast<Star>());
-            //    else if (e.Action == NotifyCollectionChangedAction.Replace)
-            //    {
-            //        foreach (Star item in e.NewItems!)
-            //        {
-            //            DatabaseLocator.Context.Stars.Entry(item).State = EntityState.Modified;
-            //        }
-            //    }
-            //    DatabaseLocator.Context.SaveChanges();
+            };
+            Stars.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                    DatabaseLocator.Context.Stars.AddRange(e.NewItems.Cast<Star>());
+                else if (e.OldItems != null)
+                    DatabaseLocator.Context.Stars.RemoveRange(e.OldItems.Cast<Star>());
+                else if (e.Action == NotifyCollectionChangedAction.Replace)
+                {
+                    foreach (Star item in e.NewItems!)
+                    {
+                        DatabaseLocator.Context.Stars.Entry(item).State = EntityState.Modified;
+                    }
+                }
+                DatabaseLocator.Context.SaveChanges();
 
-            //};
-            //Galaxies.CollectionChanged += (s, e) =>
-            //{
-            //    if (e.NewItems != null)
-            //        DatabaseLocator.Context.Galaxies.AddRange(e.NewItems.Cast<Galaxy>());
-            //    else if (e.OldItems != null)
-            //        DatabaseLocator.Context.Galaxies.RemoveRange(e.OldItems.Cast<Galaxy>());
-            //    else if (e.Action == NotifyCollectionChangedAction.Replace)
-            //    {
-            //        foreach (Galaxy item in e!.NewItems!)
-            //        {
-            //            DatabaseLocator.Context.Galaxies.Entry(item).State = EntityState.Modified;
-            //        }
-            //    }
-               
-            //    DatabaseLocator.Context.SaveChanges();
+            };
+            Galaxies.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                    DatabaseLocator.Context.Galaxies.AddRange(e.NewItems.Cast<Galaxy>());
+                else if (e.OldItems != null)
+                    DatabaseLocator.Context.Galaxies.RemoveRange(e.OldItems.Cast<Galaxy>());
+                else if (e.Action == NotifyCollectionChangedAction.Replace)
+                {
+                    foreach (Galaxy item in e!.NewItems!)
+                    {
+                        DatabaseLocator.Context.Galaxies.Entry(item).State = EntityState.Modified;
+                    }
+                }
 
-              
+                DatabaseLocator.Context.SaveChanges();
 
 
-            //};
+
+
+            };
             greetingsSwitch = settingService.Greetings;
             if (greetingsSwitch)
-              messageService.SendMessage("Hey, have a good day");
+                messageService.SendMessage("Hey, have a good day");
 
         }
 
         public IAstronomicalObject SelectedObject { get; set; } = null!;
 
         private bool greetingsSwitch;
+
         public bool GreetingsSwitch
         {
-            get
-            {
-                return settingService.Greetings;
-            }
+            get { return settingService.Greetings; }
             set
             {
                 if (value != greetingsSwitch)
@@ -184,7 +187,7 @@ namespace Kr4.ViewModel
                 var spectralClasses = DatabaseLocator.Context!.SpectralClasses.ToList();
                 spectralClasses.Insert(0, new SpectralClass() { Name = "none" });
                 return spectralClasses;
-               
+
             }
         }
 
@@ -193,65 +196,65 @@ namespace Kr4.ViewModel
 
         public ICommand LoadSpectralClasses
         {
-            get { return new DelegateCommand(() =>
-            {
-                RaisePropertiesChanged(nameof(SpectralClasses));
-            }); }
+            get { return new DelegateCommand(() => { RaisePropertiesChanged(nameof(SpectralClasses)); }); }
         }
 
         public ICommand LoadGalaxyTypes
         {
-            get
-            {
-
-                return new DelegateCommand(() =>
-                {
-                    RaisePropertiesChanged(nameof(GalaxyTypes));
-                });
-                
-            }
+            get { return new DelegateCommand(() => { RaisePropertiesChanged(nameof(GalaxyTypes)); }); }
         }
 
         public ICommand Change
         {
-            get
-            {
-             
-                return new DelegateCommand(() =>
-                {
-                    editWindowsFactory.CreateEditWindow(SelectedObject).Show();
-
-                });
-
-            }
+            get { return new DelegateCommand(() => { editWindowsFactory.CreateEditWindow(SelectedObject).Show(); }); }
         }
 
         public ICommand Delete
         {
             get
             {
-
                 return new DelegateCommand(() =>
                 {
                     if (SelectedObject is Planet)
                         Planets.Remove((SelectedObject as Planet)!);
                     else if (SelectedObject is Galaxy)
-                       Galaxies.Remove((SelectedObject as Galaxy)!);
+                        Galaxies.Remove((SelectedObject as Galaxy)!);
                     else if (SelectedObject is Star)
                         Stars.Remove((SelectedObject as Star)!);
                     else
-                       messageService.SendMessage("Select an object to delete");
-                   
-                   
+                        messageService.SendMessage("Select an object to delete");
+
+
 
 
                 });
-
             }
         }
 
+        public ICommand ExportToExcel
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    switch (SelectedTab)
+                    {
+                        case PlanetsTab:
+                            excelExportService.ExportToExcel(Planets, fileDialogService.ShowFileSaveDialog());
+                            break;
+                        case GalaxiesTab:
+                            excelExportService.ExportToExcel(Galaxies, fileDialogService.ShowFileSaveDialog());
+                            break;
+                        case StarsTab:
+                            excelExportService.ExportToExcel(Stars, fileDialogService.ShowFileSaveDialog());
+                            break;
+                    }
+                });
+            }
+        }
+    
 
-        public ICommand Search
+    public ICommand Search
         {
             get
             {
