@@ -1,13 +1,38 @@
 using Kr4.Model;
 using Kr4.Model.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Kr4.Model.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Testqwe
 {
     [TestClass]
     public class UnitTest1
     {
+        public UnitTest1()
+        {
+            //C:\poe\Kr4.db
+            Database.EnsureDeleted();
+            Database.EnsureCreated();
+        }
 
-        [TestMethod]
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite(@"Data Source=C:\poe\Kr4.db");
+        }
+
+        public DbSet<Planet> Planets { get; set; }
+        public DbSet<Star> Stars { get; set; }
+        public DbSet<Galaxy> Galaxies { get; set; }
+
+        public DbSet<SpectralClass> SpectralClasses { get; set; }
+
+        public DbSet<GalaxyType> GalaxysTypes { get; set; }
+
+    
+
+    [TestMethod]
         public void AddGalaxy_ShouldAddGalaxyToDatabase()
         {
             using (var context = new AstronomicalContext())
