@@ -87,6 +87,7 @@
 
             <StackPanel Grid.Row="1" Background="Plum">
                 <Button Content="Add " Margin="3" FontSize="24" Command="{Binding OpenAdd}"/>
+                <Button Content="Export To Excel " Margin="3" FontSize="24" Command="{Binding ExportToExcel}"/>
                 <CheckBox Content="Greetings" IsChecked="{Binding GreetingsSwitch}"/>
 
 

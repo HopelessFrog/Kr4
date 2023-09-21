@@ -26,6 +26,8 @@ namespace Kr4.Bootstrapper
         {
             builder.RegisterType<MessageService>().As<IMessageService>();
             builder.RegisterType<SettingService>().As<ISettingService>();
+            builder.RegisterType<ExcelExportService>().As<IExcelExportService>();
+            builder.RegisterType<FileDialogService>().As<IFileDialogService>();
         }
 
         private static void RegisterFactorys(ContainerBuilder builder)
