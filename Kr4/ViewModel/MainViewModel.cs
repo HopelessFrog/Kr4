@@ -163,7 +163,24 @@ namespace Kr4.ViewModel
 
         public int MinAge { get; set; } = 0;
         public int MaxAge { get; set; } = 99999;
-        public int SelectedTab { get; set; }
+
+        private int selectedTab;
+        public int SelectedTab
+        {
+            get
+            {
+                return selectedTab;
+            }
+            set
+            {
+                if (value != selectedTab)
+                {
+                    selectedTab = value;
+                    RaisePropertiesChanged(nameof(SelectedTab));
+                    SelectedObject = null!;
+                }
+            }
+        }
 
         public string SearchBar { get; set; } = null!;
 
@@ -234,11 +251,20 @@ namespace Kr4.ViewModel
                 return new DelegateCommand(() =>
                 {
                     if (SelectedObject is Planet)
-                        Planets.Remove((SelectedObject as Planet)!);
+                    {
+                        if(messageService.SendAscMessage("Do you really want to remove this planet?"))
+                            Planets.Remove((SelectedObject as Planet)!);
+                    }
                     else if (SelectedObject is Galaxy)
-                       Galaxies.Remove((SelectedObject as Galaxy)!);
+                    {
+                        if (messageService.SendAscMessage("Do you really want to remove this galaxie?"))
+                            Galaxies.Remove((SelectedObject as Galaxy)!);
+                    }
                     else if (SelectedObject is Star)
-                        Stars.Remove((SelectedObject as Star)!);
+                    {
+                        if (messageService.SendAscMessage("Do you really want to remove this star?"))
+                            Stars.Remove((SelectedObject as Star)!);
+                    }
                     else
                        messageService.SendMessage("Select an object to delete");
                    
@@ -264,8 +290,8 @@ namespace Kr4.ViewModel
                             List<Expression<Func<Planet, bool>>> conditionsPlanets = new List<Expression<Func<Planet, bool>>>();
                             if(!string.IsNullOrEmpty(SearchBar))
                                 conditionsPlanets.Add(p => p.Name!.Contains(SearchBar));
-                           conditionsPlanets.Add(p => p.Age > MinAge);
-                           conditionsPlanets.Add(p => p.Age < MaxAge);
+                           conditionsPlanets.Add(p => p.Age >= MinAge);
+                           conditionsPlanets.Add(p => p.Age <= MaxAge);
                             foreach (var item in conditionsPlanets)
                             {
                                 planets = planets.Where(item);
@@ -279,8 +305,8 @@ namespace Kr4.ViewModel
                                 conditionsStars.Add(s => s.Class!.Name == SpectralClassEntered.Name);
                             if (SearchBar != "" && SearchBar != null)
                                 conditionsStars.Add(p => p.Name!.Contains(SearchBar));
-                            conditionsStars.Add(p => p.Age > MinAge);
-                            conditionsStars.Add(p => p.Age < MaxAge);
+                            conditionsStars.Add(p => p.Age >= MinAge);
+                            conditionsStars.Add(p => p.Age <= MaxAge);
                             foreach (var item in conditionsStars)
                             {
                                 stars = stars.Where(item);
@@ -294,8 +320,8 @@ namespace Kr4.ViewModel
                                 conditionsGalaxies.Add(g => g.Type!.Name == GalaxyTypeEnter.Name);
                             if (SearchBar != "" && SearchBar != null)
                                 conditionsGalaxies.Add(p => p.Name!.Contains(SearchBar));
-                          conditionsGalaxies.Add(p => p.Age > MinAge);
-                          conditionsGalaxies.Add(p => p.Age < MaxAge);
+                          conditionsGalaxies.Add(p => p.Age >= MinAge);
+                          conditionsGalaxies.Add(p => p.Age <= MaxAge);
                             foreach (var item in conditionsGalaxies)
                             {
                                 galaxies = galaxies.Where(item);

@@ -21,5 +21,11 @@ namespace Kr4.Services
             Xceed.Wpf.Toolkit.MessageBox.Show( message, "",
                 MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+        public bool SendAscMessage(string message)
+        {
+            return Xceed.Wpf.Toolkit.MessageBox.Show(message, "",
+                MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK;
+        }
     }
 }

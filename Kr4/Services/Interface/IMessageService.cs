@@ -10,5 +10,7 @@ namespace Kr4.Services.Interface
     {
         void SendMessage(string message);
         void SendMessageError(string message);
+
+        bool SendAscMessage(string message);
     }
 }
