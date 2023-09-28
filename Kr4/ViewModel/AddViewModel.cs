@@ -79,6 +79,99 @@ namespace Kr4.ViewModel
             }
         }
 
+        public void AddOnePlanet(string name, double distance, double age, double orbitalPeriod, double size)
+        {
+            if (name != "")
+            {
+                DatabaseLocator.Context!.Planets.Add(new Planet()
+                {
+                    Name = name,
+                    DistanceFromEarth = distance,
+                    Age = age,
+                    OrbitalPeriod = orbitalPeriod,
+                    Size = size
+                });
+                messageService.SendMessage("Object created successfully");
+            }
+            else
+            {
+                messageService.SendMessageError("Fill out the required field Name");
+                return;
+            }
+        }
+
+        public void AddOneStar(string name, double distance, double age, SpectralClass spectralClass, double luminosity)
+        {
+            if (name != "" && spectralClass != null)
+            {
+                DatabaseLocator.Context!.Stars.Add(new Star()
+                {
+                    Name = name,
+                    Age = age,
+                    DistanceFromEarth = distance,
+                    Class = spectralClass,
+                    Luminosity = luminosity
+                });
+                messageService.SendMessage("Object created successfully");
+            }
+            else
+            {
+                messageService.SendMessageError("Fill out the required field Name and Spectral Class");
+                return;
+            }
+        }
+
+        public void AddOneSpectralClass(string name)
+        {
+            if (name != "")
+            {
+                DatabaseLocator.Context!.SpectralClasses.Add(new SpectralClass() { Name = name });
+                ChangedList = nameof(SpectralClasses);
+                messageService.SendMessage("Object created successfully");
+            }
+            else
+            {
+                messageService.SendMessageError("Fill out the required field Name");
+                return;
+
+            }
+        }
+
+        public void  AddOneGalaxy(string name, double distance, double age, GalaxyType galaxyType)
+        {
+            if (name != "" && galaxyType != null)
+            {
+                DatabaseLocator.Context!.Galaxies.Add(new Galaxy()
+                {
+                    Name = name,
+                    Type =galaxyType,
+                    DistanceFromEarth = distance,
+                    Age = age
+                });
+                messageService.SendMessage("Object created successfully");
+            }
+            else
+            {
+                messageService.SendMessageError("Fill out the required field Name and Type");
+                return;
+            }
+        }
+
+        public void AddOneGakaxyType(string name)
+        {
+            if (name != "")
+            {
+                ChangedList = nameof(GalaxyTypes);
+                DatabaseLocator.Context!.GalaxysTypes.Add(new GalaxyType() { Name = name });
+                messageService.SendMessage("Object created successfully");
+            }
+            else
+            {
+                messageService.SendMessageError("Fill out the required field Name");
+                return;
+            }
+        }
+
         public ICommand Add
         {
             get
@@ -89,89 +182,31 @@ namespace Kr4.ViewModel
                     {
 
                         case AddPlanet:
-                            if (Name != "")
-                            {
-                                DatabaseLocator.Context!.Planets.Add(new Planet()
-                                {
-                                    Name = this.Name, DistanceFromEarth = this.DistanceFromEarth, Age = this.Age,
-                                    OrbitalPeriod = this.OrbitalPeriod, Size = this.Size
-                                });
-                                messageService.SendMessage("Object created successfully");
-                            }
-                            else
-                            {
-                               messageService.SendMessageError("Fill out the required field Name");
-                                return;
-                            }
-
+                            AddOnePlanet(this.Name,this.DistanceFromEarth,this.Age,this.OrbitalPeriod,this.Size);
+                            
                             break;
                         case AddStar:
-                            if (Name != "" && SpectralClasses != null)
-                            {
-                                DatabaseLocator.Context!.Stars.Add(new Star()
-                                {
-                                    Name = this.Name, Age = this.Age, DistanceFromEarth = this.DistanceFromEarth,
-                                    Class = this.SpectralClass, Luminosity = this.Luminosity
-                                });
-                                messageService.SendMessage("Object created successfully");
-                            }
-                            else
-                            {
-                               messageService.SendMessageError("Fill out the required field Name and Spectral Class");
-                                return;
-                            }
+                            AddOneStar(this.Name, this.DistanceFromEarth, this.Age, this.SpectralClass, this.Luminosity);
 
                             break;
                         case AddSpectralClass:
-                            if (Name != "")
-                            {
-                                DatabaseLocator.Context!.SpectralClasses.Add(new SpectralClass() { Name = this.Name });
-                                ChangedList = nameof(SpectralClasses);
-                                messageService.SendMessage("Object created successfully");
-                            }
-                            else
-                            {
-                                messageService.SendMessageError("Fill out the required field Name");
-                                return;
-
-                            }
+                            AddOneSpectralClass(this.Name);
+                            
 
                             break;
                         case AddGalaxy:
-                            if (Name != "" && GalaxyType != null )
-                            {
-                                DatabaseLocator.Context!.Galaxies.Add(new Galaxy()
-                                {
-                                    Name = this.Name, Type = GalaxyType, DistanceFromEarth = this.DistanceFromEarth,
-                                    Age = this.Age
-                                });
-                                messageService.SendMessage("Object created successfully");
-                            }
-                            else
-                            {
-                                messageService.SendMessageError("Fill out the required field Name and Type");
-                                return;
-                            }
+                            AddOneGalaxy(this.Name,this.DistanceFromEarth, this.Age,this.GalaxyType);
+                           
 
                             break;
                         case AddGalaxyType:
-                            if (Name != "")
-                            {
-                                ChangedList = nameof(GalaxyTypes);
-                                DatabaseLocator.Context!.GalaxysTypes.Add(new GalaxyType() { Name = this.Name });
-                                messageService.SendMessage("Object created successfully");
-                            }
-                            else
-                            {
-                                messageService.SendMessageError("Fill out the required field Name");
-                                return;
-                            }
+                            AddOneGakaxyType(this.Name);
 
                             break;
                     }
-                 //   eventAgregator.NotifyDBChanged();
                    
                     DatabaseLocator.Context!.SaveChanges();
+                    AddOne?.Invoke(this,EventArgs.Empty);
                  if(ChangedList != "")
                     RaisePropertiesChanged(ChangedList);
                  clearFields();
@@ -180,6 +215,7 @@ namespace Kr4.ViewModel
 
         }
 
-       
+
+        public event EventHandler? AddOne;
     }
 }

@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kr4.ViewModel.EditViewModels.Interface
+namespace Kr4.Services
 {
-    public interface IAddViewModel
+    class AstromicalObjectFactory
     {
-        event EventHandler AddOne;
     }
 }

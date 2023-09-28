@@ -17,10 +17,23 @@ namespace Kr4.Model
             Database.EnsureDeleted();
             Database.EnsureCreated();
         }
+        public AstronomicalContext(DbContextOptions<AstronomicalContext> options)
+            : base(options)
+        {
+            //C:\poe\Kr4.db
+            Database.EnsureDeleted();
+            Database.EnsureCreated();
+        }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite(@"Data Source=C:\poe\Kr4.db");
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Planet> Planets { get; set; }

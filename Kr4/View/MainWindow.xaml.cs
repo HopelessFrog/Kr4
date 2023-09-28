@@ -24,6 +24,6 @@ namespace Kr4
             InitializeComponent();
         }
 
-     
+       
     }
 }

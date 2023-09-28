@@ -193,7 +193,7 @@ namespace Kr4.ViewModel
 
         public GalaxyType GalaxyTypeEnter { get; set; } = null!;
         public SpectralClass SpectralClassEntered { get; set; } = null!;
-
+        
         public ICommand LoadSpectralClasses
         {
             get { return new DelegateCommand(() => { RaisePropertiesChanged(nameof(SpectralClasses)); }); }
@@ -208,6 +208,8 @@ namespace Kr4.ViewModel
         {
             get { return new DelegateCommand(() => { editWindowsFactory.CreateEditWindow(SelectedObject).Show(); }); }
         }
+
+
 
         public ICommand Delete
         {
@@ -252,62 +254,66 @@ namespace Kr4.ViewModel
                 });
             }
         }
-    
 
+
+        private void SearchM()
+        {
+            switch (SelectedTab)
+            {
+                case PlanetsTab:
+                    var planets = DatabaseLocator.Context!.Planets.AsQueryable();
+                    List<Expression<Func<Planet, bool>>> conditionsPlanets = new List<Expression<Func<Planet, bool>>>();
+                    if (!string.IsNullOrEmpty(SearchBar))
+                        conditionsPlanets.Add(p => p.Name!.Contains(SearchBar));
+                    conditionsPlanets.Add(p => p.Age >= MinAge);
+                    conditionsPlanets.Add(p => p.Age <= MaxAge);
+                    foreach (var item in conditionsPlanets)
+                    {
+                        planets = planets.Where(item);
+                    }
+                    Planets = new ObservableCollection<Planet>(planets.ToList());
+                    break;
+                case StarsTab:
+                    var stars = DatabaseLocator.Context!.Stars.AsQueryable();
+                    List<Expression<Func<Star, bool>>> conditionsStars = new List<Expression<Func<Star, bool>>>();
+                    if (SpectralClassEntered != null && SpectralClassEntered.Name != "none")
+                        conditionsStars.Add(s => s.Class!.Name == SpectralClassEntered.Name);
+                    if (SearchBar != "" && SearchBar != null)
+                        conditionsStars.Add(p => p.Name!.Contains(SearchBar));
+                    conditionsStars.Add(p => p.Age >= MinAge);
+                    conditionsStars.Add(p => p.Age <= MaxAge);
+                    foreach (var item in conditionsStars)
+                    {
+                        stars = stars.Where(item);
+                    }
+                    Stars = new ObservableCollection<Star>(stars.ToList());
+                    break;
+                case GalaxiesTab:
+                    var galaxies = DatabaseLocator.Context!.Galaxies.AsQueryable();
+                    List<Expression<Func<Galaxy, bool>>> conditionsGalaxies = new List<Expression<Func<Galaxy, bool>>>();
+                    if (GalaxyTypeEnter != null && GalaxyTypeEnter.Name != "none")
+                        conditionsGalaxies.Add(g => g.Type!.Name == GalaxyTypeEnter.Name);
+                    if (SearchBar != "" && SearchBar != null)
+                        conditionsGalaxies.Add(p => p.Name!.Contains(SearchBar));
+                    conditionsGalaxies.Add(p => p.Age >= MinAge);
+                    conditionsGalaxies.Add(p => p.Age <= MaxAge);
+                    foreach (var item in conditionsGalaxies)
+                    {
+                        galaxies = galaxies.Where(item);
+                    }
+                    Galaxies = new ObservableCollection<Galaxy>(galaxies.ToList());
+                    break;
+
+            }
+        }
     public ICommand Search
         {
             get
             {
                 return new DelegateCommand(() =>
                 {
-                    switch (SelectedTab)
-                    {
-                        case PlanetsTab:
-                            var planets = DatabaseLocator.Context!.Planets.AsQueryable();
-                            List<Expression<Func<Planet, bool>>> conditionsPlanets = new List<Expression<Func<Planet, bool>>>();
-                            if(!string.IsNullOrEmpty(SearchBar))
-                                conditionsPlanets.Add(p => p.Name!.Contains(SearchBar));
-                           conditionsPlanets.Add(p => p.Age >= MinAge);
-                           conditionsPlanets.Add(p => p.Age <= MaxAge);
-                            foreach (var item in conditionsPlanets)
-                            {
-                                planets = planets.Where(item);
-                            }
-                            Planets = new ObservableCollection<Planet>(planets.ToList());
-                            break;
-                        case StarsTab:
-                            var stars = DatabaseLocator.Context!.Stars.AsQueryable();
-                            List<Expression<Func<Star, bool>>> conditionsStars = new List<Expression<Func<Star, bool>>>();
-                            if(SpectralClassEntered != null && SpectralClassEntered.Name != "none"  )
-                                conditionsStars.Add(s => s.Class!.Name == SpectralClassEntered.Name);
-                            if (SearchBar != "" && SearchBar != null)
-                                conditionsStars.Add(p => p.Name!.Contains(SearchBar));
-                            conditionsStars.Add(p => p.Age >= MinAge);
-                            conditionsStars.Add(p => p.Age <= MaxAge);
-                            foreach (var item in conditionsStars)
-                            {
-                                stars = stars.Where(item);
-                            }
-                            Stars = new ObservableCollection<Star>(stars.ToList());
-                            break;
-                        case GalaxiesTab:
-                            var galaxies = DatabaseLocator.Context!.Galaxies.AsQueryable();
-                            List<Expression<Func<Galaxy, bool>>> conditionsGalaxies = new List<Expression<Func<Galaxy, bool>>>();
-                            if (GalaxyTypeEnter != null && GalaxyTypeEnter.Name != "none" )
-                                conditionsGalaxies.Add(g => g.Type!.Name == GalaxyTypeEnter.Name);
-                            if (SearchBar != "" && SearchBar != null)
-                                conditionsGalaxies.Add(p => p.Name!.Contains(SearchBar));
-                          conditionsGalaxies.Add(p => p.Age >= MinAge);
-                          conditionsGalaxies.Add(p => p.Age <= MaxAge);
-                            foreach (var item in conditionsGalaxies)
-                            {
-                                galaxies = galaxies.Where(item);
-                            }
-                            Galaxies = new ObservableCollection<Galaxy>(galaxies.ToList());
-                            break;
-
-                    }
-                       
+                    
+                       SearchM();
                    
                 });
             }
@@ -320,11 +326,17 @@ namespace Kr4.ViewModel
                 return new DelegateCommand(() =>
                 {
                     var window = new AddWindow();
-                    window.DataContext = Bootstrapper.Bootstrapper.Resolve<IAddViewModel>();
+                    IAddViewModel model = Bootstrapper.Bootstrapper.Resolve<IAddViewModel>();
+                    model.AddOne += Model_AddOne;
+                    window.DataContext = model;
                     window.ShowDialog();
                 });
             }
         }
 
+        private void Model_AddOne(object? sender, EventArgs e)
+        {
+            SearchM();
+        }
     }
 }

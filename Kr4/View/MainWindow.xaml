@@ -128,7 +128,7 @@
 
                         </Grid>
                         <Grid Grid.Row="1">
-                            <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding Planets}" SelectedItem="{Binding SelectedObject}">
+                            <ListBox HorizontalContentAlignment="Stretch" ItemsSource="{Binding Planets}" SelectedItem="{Binding SelectedObject}" >
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <UniformGrid Columns="5">
