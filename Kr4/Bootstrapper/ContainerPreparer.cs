@@ -33,6 +33,7 @@ namespace Kr4.Bootstrapper
         private static void RegisterFactorys(ContainerBuilder builder)
         {
             builder.RegisterType<EditWindowFactory>().As<IEditWindowsFactory>();
+            builder.RegisterType<AstronomicalObjectFactoty>().As<IAsronomicalObjectFactoty>();
         }
 
         private static void RegisterViewModels(ContainerBuilder builder)

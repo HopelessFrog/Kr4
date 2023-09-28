@@ -27,10 +27,12 @@ namespace Kr4.ViewModel
         private string ChangedList = "";
 
         private IMessageService messageService;
+        private IAsronomicalObjectFactoty asronomicalObjectFactoty;
 
-        public AddViewModel(IMessageService messageService)
+        public AddViewModel(IMessageService messageService, IAsronomicalObjectFactoty asronomicalObjectFactoty)
         {
             this.messageService = messageService;
+            this.asronomicalObjectFactoty = asronomicalObjectFactoty;
         }
 
         public int SelectedTab { get; set; }
@@ -79,98 +81,7 @@ namespace Kr4.ViewModel
             }
         }
 
-        public void AddOnePlanet(string name, double distance, double age, double orbitalPeriod, double size)
-        {
-            if (name != "")
-            {
-                DatabaseLocator.Context!.Planets.Add(new Planet()
-                {
-                    Name = name,
-                    DistanceFromEarth = distance,
-                    Age = age,
-                    OrbitalPeriod = orbitalPeriod,
-                    Size = size
-                });
-                messageService.SendMessage("Object created successfully");
-            }
-            else
-            {
-                messageService.SendMessageError("Fill out the required field Name");
-                return;
-            }
-        }
-
-        public void AddOneStar(string name, double distance, double age, SpectralClass spectralClass, double luminosity)
-        {
-            if (name != "" && spectralClass != null)
-            {
-                DatabaseLocator.Context!.Stars.Add(new Star()
-                {
-                    Name = name,
-                    Age = age,
-                    DistanceFromEarth = distance,
-                    Class = spectralClass,
-                    Luminosity = luminosity
-                });
-                messageService.SendMessage("Object created successfully");
-            }
-            else
-            {
-                messageService.SendMessageError("Fill out the required field Name and Spectral Class");
-                return;
-            }
-        }
-
-        public void AddOneSpectralClass(string name)
-        {
-            if (name != "")
-            {
-                DatabaseLocator.Context!.SpectralClasses.Add(new SpectralClass() { Name = name });
-                ChangedList = nameof(SpectralClasses);
-                messageService.SendMessage("Object created successfully");
-            }
-            else
-            {
-                messageService.SendMessageError("Fill out the required field Name");
-                return;
-
-            }
-        }
-
-        public void  AddOneGalaxy(string name, double distance, double age, GalaxyType galaxyType)
-        {
-            if (name != "" && galaxyType != null)
-            {
-                DatabaseLocator.Context!.Galaxies.Add(new Galaxy()
-                {
-                    Name = name,
-                    Type =galaxyType,
-                    DistanceFromEarth = distance,
-                    Age = age
-                });
-                messageService.SendMessage("Object created successfully");
-            }
-            else
-            {
-                messageService.SendMessageError("Fill out the required field Name and Type");
-                return;
-            }
-        }
-
-        public void AddOneGakaxyType(string name)
-        {
-            if (name != "")
-            {
-                ChangedList = nameof(GalaxyTypes);
-                DatabaseLocator.Context!.GalaxysTypes.Add(new GalaxyType() { Name = name });
-                messageService.SendMessage("Object created successfully");
-            }
-            else
-            {
-                messageService.SendMessageError("Fill out the required field Name");
-                return;
-            }
-        }
+       
 
         public ICommand Add
         {
@@ -182,25 +93,25 @@ namespace Kr4.ViewModel
                     {
 
                         case AddPlanet:
-                            AddOnePlanet(this.Name,this.DistanceFromEarth,this.Age,this.OrbitalPeriod,this.Size);
+                            asronomicalObjectFactoty.AddPlanet(this.Name,this.DistanceFromEarth,this.Age,this.OrbitalPeriod,this.Size) ;
                             
                             break;
                         case AddStar:
-                            AddOneStar(this.Name, this.DistanceFromEarth, this.Age, this.SpectralClass, this.Luminosity);
+                            asronomicalObjectFactoty.AddStar(this.Name, this.DistanceFromEarth, this.Age, this.SpectralClass, this.Luminosity);
 
                             break;
                         case AddSpectralClass:
-                            AddOneSpectralClass(this.Name);
+                           ChangedList = asronomicalObjectFactoty.AddSpectralClass(this.Name, SpectralClasses);
                             
 
                             break;
                         case AddGalaxy:
-                            AddOneGalaxy(this.Name,this.DistanceFromEarth, this.Age,this.GalaxyType);
+                            asronomicalObjectFactoty.AddGalaxy(this.Name,this.DistanceFromEarth, this.Age,this.GalaxyType);
                            
 
                             break;
                         case AddGalaxyType:
-                            AddOneGakaxyType(this.Name);
+                            ChangedList = asronomicalObjectFactoty.AddGakaxyType(this.Name, GalaxyTypes);
 
                             break;
                     }
