@@ -214,7 +214,7 @@ namespace Kr4.ViewModel
         public ICommand LoadSpectralClasses
         {
             get { return new DelegateCommand(() => { RaisePropertiesChanged(nameof(SpectralClasses)); }); }
-        }
+        } 
 
         public ICommand LoadGalaxyTypes
         {
@@ -228,6 +228,25 @@ namespace Kr4.ViewModel
 
 
 
+
+        public void DeleteLogic(IAstronomicalObject obj)
+        {
+
+            if (SelectedObject is Planet)
+            {
+                DatabaseLocator.Context.Planets.Remove(obj as Planet);
+            }
+            else if (SelectedObject is Galaxy)
+            {
+                DatabaseLocator.Context.Galaxies.Remove(obj as Galaxy);
+            }
+            else if (SelectedObject is Star)
+            {
+                DatabaseLocator.Context.Stars.Remove(obj as Star);
+            }
+
+            DatabaseLocator.Context.SaveChanges();
+        }
         public ICommand Delete
         {
             get
@@ -236,18 +255,29 @@ namespace Kr4.ViewModel
                 {
                     if (SelectedObject is Planet)
                     {
-                        if(messageService.SendAscMessage("Do you really want to remove this planet?"))
-                            Planets.Remove((SelectedObject as Planet)!);
+                        if (messageService.SendAscMessage("Do you really want to remove this planet?"))
+                        {
+                            DeleteLogic(SelectedObject);
+                            Search();
+                        }
+                            
+
                     }
                     else if (SelectedObject is Galaxy)
                     {
                         if (messageService.SendAscMessage("Do you really want to remove this galaxie?"))
-                            Galaxies.Remove((SelectedObject as Galaxy)!);
+                        {
+                            DeleteLogic(SelectedObject);
+                            Search();
+                        }
                     }
                     else if (SelectedObject is Star)
                     {
                         if (messageService.SendAscMessage("Do you really want to remove this star?"))
-                            Stars.Remove((SelectedObject as Star)!);
+                        {
+                            DeleteLogic(SelectedObject);
+                            Search();
+                        }
                     }
                     else
                         messageService.SendMessage("Select an object to delete");
@@ -282,7 +312,7 @@ namespace Kr4.ViewModel
         }
 
 
-        private void SearchM()
+        public void Search()
         {
             switch (SelectedTab)
             {
@@ -332,14 +362,14 @@ namespace Kr4.ViewModel
 
             }
         }
-    public ICommand Search
+    public ICommand SearchCommand
         {
             get
             {
                 return new DelegateCommand(() =>
                 {
                     
-                       SearchM();
+                       Search();
                    
                 });
             }
@@ -362,7 +392,7 @@ namespace Kr4.ViewModel
 
         private void Model_AddOne(object? sender, EventArgs e)
         {
-            SearchM();
+            Search();
         }
     }
 }

@@ -68,7 +68,7 @@
 
                 </TextBox>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Grid.Row="1" Command="{Binding Search}" FontSize="25" Content="Search" VerticalAlignment="Top" HorizontalAlignment="Center" />
+                    <Button Grid.Row="1" Command="{Binding SearchCommand}" FontSize="25" Content="Search" VerticalAlignment="Top" HorizontalAlignment="Center" />
                   
 
 

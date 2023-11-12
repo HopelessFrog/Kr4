@@ -15,13 +15,13 @@ namespace Testqwe
     public class UnitTest1
     {
         private AstronomicalContext dbContext;
-        private IAsronomicalObjectFactoty asronomicalObjectFactoty;
+        private AstronomicalObjectFactoty asronomicalObjectFactoty;
 
         [SetUp]
         public void SetUp()
         {
             Bootstrapper.Run();
-            asronomicalObjectFactoty = Bootstrapper.Resolve<IAsronomicalObjectFactoty>();
+            asronomicalObjectFactoty = (AstronomicalObjectFactoty) Bootstrapper.Resolve<IAsronomicalObjectFactoty>();
             // Настроим тестовую базу данных SQLite в памяти
             var options = new DbContextOptionsBuilder<AstronomicalContext>()
                 .UseSqlite("Data Source=:memory:")
@@ -56,9 +56,10 @@ namespace Testqwe
                     DistanceFromEarth = 2.537e6,
                     Age = 1.4e10
                 };
-                asronomicalObjectFactoty.AddGalaxy("QWe", 123, 123, new GalaxyType { Name = "Spiral" });
-               
-               
+                asronomicalObjectFactoty.AddGalaxyLogic("QWe", 123, 123, new GalaxyType { Name = "Spiral" });
+
+                var qwe = dbContext.Galaxies.Single().Name;
+
                 //Assert.AreEqual(1, dbContext.Galaxies.Count());
                 Assert.AreEqual("QWe", dbContext.Galaxies.Single().Name);
             

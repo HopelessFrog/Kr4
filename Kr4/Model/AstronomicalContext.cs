@@ -40,10 +40,7 @@ namespace Kr4.Model
             optionsBuilder.UseSqlite(@"Data Source= C:\poe\Kr4.db");
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-        }
+       
 
         public DbSet<Planet> Planets { get; set; }
         public DbSet<Star> Stars { get; set; }

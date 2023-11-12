@@ -16,7 +16,8 @@ namespace Kr4.Services
         {
             this.messageService = messageService;
         }
-        public void AddPlanet(string name, double distance, double age, double orbitalPeriod, double size)
+
+        public bool AddPlanteLogic(string name, double distance, double age, double orbitalPeriod, double size)
         {
             if (name != "")
             {
@@ -28,16 +29,27 @@ namespace Kr4.Services
                     OrbitalPeriod = orbitalPeriod,
                     Size = size
                 });
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void AddPlanet(string name, double distance, double age, double orbitalPeriod, double size)
+        {
+            if (AddPlanteLogic(name,  distance,  age,  orbitalPeriod,  size))
+            {
                 messageService.SendMessage("Object created successfully");
             }
             else
             {
                 messageService.SendMessageError("Fill out the required field Name");
-                return;
             }
         }
 
-        public void AddStar(string name, double distance, double age, SpectralClass spectralClass, double luminosity)
+        public bool AddStarLogic(string name, double distance, double age, SpectralClass spectralClass,
+            double luminosity)
         {
             if (name != "" && spectralClass != null)
             {
@@ -49,21 +61,46 @@ namespace Kr4.Services
                     Class = spectralClass,
                     Luminosity = luminosity
                 });
+                return true;
+
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void AddStar(string name, double distance, double age, SpectralClass spectralClass, double luminosity)
+        {
+            if (AddStarLogic( name,  distance,  age,  spectralClass, luminosity))
+            {
                 messageService.SendMessage("Object created successfully");
-                
             }
             else
             {
                 messageService.SendMessageError("Fill out the required field Name and Spectral Class");
-                return;
             }
         }
 
-        public string AddSpectralClass(string name, List<SpectralClass> spectralClasses)
+        public bool AddSpectralClassLogic(string name, List<SpectralClass> spectralClasses)
         {
             if (name != "")
             {
                 DatabaseLocator.Context!.SpectralClasses.Add(new SpectralClass() { Name = name });
+
+
+                return true;
+            }
+            else
+            {
+
+                return false;
+
+            }
+        }
+        public string AddSpectralClass(string name, List<SpectralClass> spectralClasses)
+        {
+            if (AddSpectralClassLogic( name,  spectralClasses))
+            {
               
                 messageService.SendMessage("Object created successfully");
 
@@ -77,8 +114,7 @@ namespace Kr4.Services
 
             }
         }
-
-        public void AddGalaxy(string name, double distance, double age, GalaxyType galaxyType)
+        public bool AddGalaxyLogic(string name, double distance, double age, GalaxyType galaxyType)
         {
             if (name != "" && galaxyType != null)
             {
@@ -90,22 +126,46 @@ namespace Kr4.Services
                     Age = age
                 });
                 DatabaseLocator.Context!.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void AddGalaxy(string name, double distance, double age, GalaxyType galaxyType)
+        {
+            if (AddGalaxyLogic( name,  distance,  age,  galaxyType))
+            {
                 messageService.SendMessage("Object created successfully");
             }
             else
             {
                 messageService.SendMessageError("Fill out the required field Name and Type");
-                return;
             }
         }
 
-        public string AddGakaxyType(string name, List<GalaxyType> galaxyTypes)
+
+        public bool AddGakaxyTypeLogic(string name, List<GalaxyType> galaxyTypes)
         {
             if (name != "")
             {
-                return nameof(galaxyTypes);
+                
                 DatabaseLocator.Context!.GalaxysTypes.Add(new GalaxyType() { Name = name });
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public string AddGakaxyType(string name, List<GalaxyType> galaxyTypes)
+        {
+            if (AddGakaxyTypeLogic( name, galaxyTypes))
+            {
                 messageService.SendMessage("Object created successfully");
+                return nameof(galaxyTypes);
+               
             }
             else
             {
