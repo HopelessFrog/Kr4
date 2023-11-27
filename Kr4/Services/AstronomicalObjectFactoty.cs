@@ -29,6 +29,7 @@ namespace Kr4.Services
                     OrbitalPeriod = orbitalPeriod,
                     Size = size
                 });
+                DatabaseLocator.Context!.SaveChanges();
                 return true;
             }
             else
@@ -61,6 +62,7 @@ namespace Kr4.Services
                     Class = spectralClass,
                     Luminosity = luminosity
                 });
+                DatabaseLocator.Context!.SaveChanges();
                 return true;
 
             }
@@ -87,7 +89,7 @@ namespace Kr4.Services
             {
                 DatabaseLocator.Context!.SpectralClasses.Add(new SpectralClass() { Name = name });
 
-
+                DatabaseLocator.Context!.SaveChanges();
                 return true;
             }
             else
@@ -152,6 +154,7 @@ namespace Kr4.Services
             {
                 
                 DatabaseLocator.Context!.GalaxysTypes.Add(new GalaxyType() { Name = name });
+                DatabaseLocator.Context!.SaveChanges();
                 return true;
             }
             else

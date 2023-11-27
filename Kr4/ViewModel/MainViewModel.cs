@@ -37,6 +37,8 @@ namespace Kr4.ViewModel
         private ISettingService settingService;
         private IExcelExportService excelExportService;
         private IFileDialogService fileDialogService;
+        private IRemoveFromDbService removeService;
+        private ISearchService searchService;
 
         public ObservableCollection<Planet> Planets { get; set; }
         public ObservableCollection<Star> Stars { get; set; }
@@ -50,8 +52,13 @@ namespace Kr4.ViewModel
         //}
 
 
-        public MainViewModel(IEditWindowsFactory editWindowsFactory, IMessageService messageService,
-            ISettingService settingService, IExcelExportService excelExportService, IFileDialogService fileDialogService)
+        public MainViewModel(IEditWindowsFactory editWindowsFactory,
+            IMessageService messageService,
+            ISettingService settingService,
+            IExcelExportService excelExportService,
+            IFileDialogService fileDialogService,
+            IRemoveFromDbService removeService,
+            ISearchService searchService)
         {
 
 
@@ -87,6 +94,8 @@ namespace Kr4.ViewModel
             this.settingService = settingService;
             this.excelExportService = excelExportService;
             this.fileDialogService = fileDialogService;
+            this.removeService = removeService;
+            this.searchService = searchService;
 
             Planets.CollectionChanged += (s, e) =>
             {
@@ -229,24 +238,6 @@ namespace Kr4.ViewModel
 
 
 
-        public void DeleteLogic(IAstronomicalObject obj)
-        {
-
-            if (SelectedObject is Planet)
-            {
-                DatabaseLocator.Context.Planets.Remove(obj as Planet);
-            }
-            else if (SelectedObject is Galaxy)
-            {
-                DatabaseLocator.Context.Galaxies.Remove(obj as Galaxy);
-            }
-            else if (SelectedObject is Star)
-            {
-                DatabaseLocator.Context.Stars.Remove(obj as Star);
-            }
-
-            DatabaseLocator.Context.SaveChanges();
-        }
         public ICommand Delete
         {
             get
@@ -257,7 +248,7 @@ namespace Kr4.ViewModel
                     {
                         if (messageService.SendAscMessage("Do you really want to remove this planet?"))
                         {
-                            DeleteLogic(SelectedObject);
+                            removeService.Remove(SelectedObject);
                             Search();
                         }
                             
@@ -267,7 +258,7 @@ namespace Kr4.ViewModel
                     {
                         if (messageService.SendAscMessage("Do you really want to remove this galaxie?"))
                         {
-                            DeleteLogic(SelectedObject);
+                            removeService.Remove(SelectedObject);
                             Search();
                         }
                     }
@@ -275,7 +266,7 @@ namespace Kr4.ViewModel
                     {
                         if (messageService.SendAscMessage("Do you really want to remove this star?"))
                         {
-                            DeleteLogic(SelectedObject);
+                            removeService.Remove(SelectedObject);
                             Search();
                         }
                     }
@@ -317,47 +308,15 @@ namespace Kr4.ViewModel
             switch (SelectedTab)
             {
                 case PlanetsTab:
-                    var planets = DatabaseLocator.Context!.Planets.AsQueryable();
-                    List<Expression<Func<Planet, bool>>> conditionsPlanets = new List<Expression<Func<Planet, bool>>>();
-                    if (!string.IsNullOrEmpty(SearchBar))
-                        conditionsPlanets.Add(p => p.Name!.Contains(SearchBar));
-                    conditionsPlanets.Add(p => p.Age >= MinAge);
-                    conditionsPlanets.Add(p => p.Age <= MaxAge);
-                    foreach (var item in conditionsPlanets)
-                    {
-                        planets = planets.Where(item);
-                    }
-                    Planets = new ObservableCollection<Planet>(planets.ToList());
+                   
+
+                    Planets = new ObservableCollection<Planet>(searchService.SearchPlanet(SearchBar, MinAge, MaxAge));
                     break;
                 case StarsTab:
-                    var stars = DatabaseLocator.Context!.Stars.AsQueryable();
-                    List<Expression<Func<Star, bool>>> conditionsStars = new List<Expression<Func<Star, bool>>>();
-                    if (SpectralClassEntered != null && SpectralClassEntered.Name != "none")
-                        conditionsStars.Add(s => s.Class!.Name == SpectralClassEntered.Name);
-                    if (SearchBar != "" && SearchBar != null)
-                        conditionsStars.Add(p => p.Name!.Contains(SearchBar));
-                    conditionsStars.Add(p => p.Age >= MinAge);
-                    conditionsStars.Add(p => p.Age <= MaxAge);
-                    foreach (var item in conditionsStars)
-                    {
-                        stars = stars.Where(item);
-                    }
-                    Stars = new ObservableCollection<Star>(stars.ToList());
+                    Stars = new ObservableCollection<Star>(searchService.SearchStar(SearchBar,SpectralClassEntered,MinAge,MaxAge));
                     break;
                 case GalaxiesTab:
-                    var galaxies = DatabaseLocator.Context!.Galaxies.AsQueryable();
-                    List<Expression<Func<Galaxy, bool>>> conditionsGalaxies = new List<Expression<Func<Galaxy, bool>>>();
-                    if (GalaxyTypeEnter != null && GalaxyTypeEnter.Name != "none")
-                        conditionsGalaxies.Add(g => g.Type!.Name == GalaxyTypeEnter.Name);
-                    if (SearchBar != "" && SearchBar != null)
-                        conditionsGalaxies.Add(p => p.Name!.Contains(SearchBar));
-                    conditionsGalaxies.Add(p => p.Age >= MinAge);
-                    conditionsGalaxies.Add(p => p.Age <= MaxAge);
-                    foreach (var item in conditionsGalaxies)
-                    {
-                        galaxies = galaxies.Where(item);
-                    }
-                    Galaxies = new ObservableCollection<Galaxy>(galaxies.ToList());
+                    Galaxies = new ObservableCollection<Galaxy>(searchService.SearchGalaxy(SearchBar,GalaxyTypeEnter,MinAge,MaxAge));
                     break;
 
             }

@@ -21,8 +21,6 @@ namespace Kr4.Model
             : base(options)
         {
             //C:\poe\Kr4.db
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
         }
 
 
@@ -37,7 +35,8 @@ namespace Kr4.Model
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(@"Data Source= C:\poe\Kr4.db");
+            if(optionsBuilder.IsConfigured != true)
+                optionsBuilder.UseSqlite(@"Data Source= C:\poe\Kr4.db");
         }
 
        
